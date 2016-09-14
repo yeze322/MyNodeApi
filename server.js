@@ -10,8 +10,13 @@ app.get('/name', function(req, res) {
 });
 
 app.post('/name', function(req, res) {
-  console.log(req.body)
-  res.send('received!' + req.body.name)
+  if(req.body.name === undefined){
+    res.status(204)
+    res.send('Not reveived name! Error')
+  }else{
+    res.send('received!' + name + '->' + req.body.name)
+    name = req.body.name
+  }
 });
 
 app.listen(8080, function () {
