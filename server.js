@@ -18,6 +18,7 @@ var registerKey = (field) => {
     if(data[field] === undefined) {
       res.status(204)
     }
+    res.setHeader('Access-Control-Allow-Origin', '*')
     res.send(data[field])
   })
   app.post(url, function(req, res) {
