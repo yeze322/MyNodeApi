@@ -4,20 +4,36 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json())
 
-var name = 'yeze'
-app.get('/name', function(req, res) {
-  res.send(name);
-});
+var data = {
+  'name' : 'yeze322',
+  'repo' : 'MyNodeApi'
+}
 
-app.post('/name', function(req, res) {
-  if(req.body.name === undefined){
-    res.status(204)
-    res.send('Not reveived name! Error')
-  }else{
-    res.send('received!' + name + '->' + req.body.name)
-    name = req.body.name
-  }
-});
+var name = 'yeze322'
+var repo = 'MyNodeApi'
+
+var registerKey = (field) => {
+  var url = '/' + field
+  app.get(url, function(req, res) {
+    if(data[field] === undefined) {
+      res.status(204)
+    }
+    res.send(data[field])
+  })
+  app.post(url, function(req, res) {
+    if(req.body[field] === undefined) {
+      res.status(404)
+      res.send(`Not received ${field}! Error!`)
+    }else{
+      res.send('received: ' + data[field] + '->' + req.body[field])
+      data[field] = req.body[field]
+    }
+  })
+}
+
+registerKey('name')
+registerKey('repo')
+registerKey('pswd')
 
 app.listen(8080, function () {
   console.log('Example app listening on port 8080!');
