@@ -6,7 +6,8 @@ app.use(bodyParser.json())
 
 var data = {
   'name' : 'yeze322',
-  'repo' : 'MyNodeApi'
+  'repo' : 'MyNodeApi',
+  'pswd' : '123456'
 }
 
 var name = 'yeze322'
@@ -35,6 +36,12 @@ var registerKey = (field) => {
 registerKey('name')
 registerKey('repo')
 registerKey('pswd')
+
+app.get('/login', function(req, res) {
+  var checked = req.query.name === data.name && req.query.pswd === data.pswd
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.send(checked.toString())
+})
 
 app.listen(8080, function () {
   console.log('Example app listening on port 8080!');
