@@ -89,8 +89,8 @@ app.get('/login', function(req, res) {
 
 app.post('/logout', function(req, res) {
   if (CHECK_ORIGIN_TRUST(req, res)) {
-    lastCookie = getRandomToken()
-    res.cookie(COOKIE_KEY, '')
+    lastCookie = null
+    //res.cookie(COOKIE_KEY, '')
     res.send('cookies clear')
   }else{
     //console.log(req.headers.origin)
