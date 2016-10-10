@@ -63,10 +63,11 @@ var CHECK_COOKIE_EXIST = (req) => {
   return req.cookies.uatoken === lastCookie
 }
 
+var date = new Date()
 var CHECK_LOGIN = (req, res) => {
   var checked = req.query.name === globalState.name && req.query.pswd === globalState.pswd
   if(checked){
-    lastCookie = sha1(req.query.name + '|' + req.query.pswd)
+    lastCookie = sha1(req.query.name + '|' + date.getTime)
     res.cookie('uatoken', lastCookie)
   }
   return checked
