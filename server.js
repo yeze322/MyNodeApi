@@ -66,7 +66,7 @@ var CHECK_COOKIE_EXIST = (req) => {
 var CHECK_LOGIN = (req, res) => {
   var checked = req.query.name === globalState.name && req.query.pswd === globalState.pswd
   if(checked){
-    lastCookie = sha1(req.query.name + '|' + date.getTime())
+    lastCookie = sha1(req.query.name + '|' + Math.random())
     res.cookie(COOKIE_KEY, lastCookie)
   }
   return checked
