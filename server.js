@@ -54,18 +54,19 @@ var CHECK_ORIGIN_TRUST = (req, res) => {
   return false
 }
 
-var lastCookie = ''
+var date = new Date()
+var getRandomToken = () => sha1(date.getTime())
+var lastCookie = getRandomToken()
 
 var CHECK_COOKIE_EXIST = (req) => {
   //console.log(req.cookies)
   return req.cookies.uatoken === lastCookie
 }
 
-var date = new Date()
 var CHECK_LOGIN = (req, res) => {
   var checked = req.query.name === globalState.name && req.query.pswd === globalState.pswd
   if(checked){
-    lastCookie = sha1(req.query.name + '|' + date.getTime)
+    lastCookie = sha1(req.query.name + '|' + date.getTime())
     res.cookie(COOKIE_KEY, lastCookie)
   }
   return checked
@@ -88,7 +89,7 @@ app.get('/login', function(req, res) {
 
 app.post('/logout', function(req, res) {
   if (CHECK_ORIGIN_TRUST(req, res)) {
-    lastCookie = ""
+    lastCookie = getRandomToken()
     res.cookie(COOKIE_KEY, '')
     res.send('cookies clear')
   }else{
