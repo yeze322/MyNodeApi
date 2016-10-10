@@ -42,7 +42,8 @@ registerKey('pswd')
 
 var TrustSiteDic = {
   "http://localhost:3222": true,
-  "http://yeze.eastasia.cloudapp.azure.com:3222": true
+  "http://yeze.eastasia.cloudapp.azure.com:3222": true,
+  "http://yeze.eastasia.cloudapp.azure.com": true
 }
 
 var CHECK_ORIGIN_TRUST = (req, res) => {
