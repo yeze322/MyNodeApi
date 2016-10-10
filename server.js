@@ -37,18 +37,22 @@ registerKey('name')
 registerKey('repo')
 registerKey('pswd')
 
-var TrutSiteDic = {
+var TrustSiteDic = {
   "http://localhost:3222": true,
   "http://yeze.eastasia.cloudapp.azure.com:3222": true
 }
 
 app.get('/login', function(req, res) {
   var checked = req.query.name === data.name && req.query.pswd === data.pswd
-  if (req.headers.origin in TrutSiteDic) {
+  if (req.headers.origin in TrustSiteDic) {
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
   }
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.send(checked.toString())
+})
+
+app.get('/supervisor', function(req, res) {
+  res.send(req.headers)
 })
 
 app.listen(8080, function () {
