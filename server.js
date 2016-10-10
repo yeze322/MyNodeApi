@@ -13,9 +13,6 @@ var globalState = {
   'pswd' : '123456'
 }
 
-var name = 'yeze322'
-var repo = 'MyNodeApi'
-
 var registerKey = (field) => {
   var url = '/' + field
   app.get(url, function(req, res) {
@@ -40,11 +37,12 @@ registerKey('name')
 registerKey('repo')
 registerKey('pswd')
 
-var TrustSiteDic = {
+const TrustSiteDic = {
   "http://localhost:3222": true,
   "http://yeze.eastasia.cloudapp.azure.com:3222": true,
   "http://yeze.eastasia.cloudapp.azure.com": true
 }
+const COOKIE_KEY = 'uatoken'
 
 var CHECK_ORIGIN_TRUST = (req, res) => {
   if (req.headers.origin in TrustSiteDic) {
@@ -68,7 +66,7 @@ var CHECK_LOGIN = (req, res) => {
   var checked = req.query.name === globalState.name && req.query.pswd === globalState.pswd
   if(checked){
     lastCookie = sha1(req.query.name + '|' + date.getTime)
-    res.cookie('uatoken', lastCookie)
+    res.cookie(COOKIE_KEY, lastCookie)
   }
   return checked
 }
@@ -91,6 +89,7 @@ app.get('/login', function(req, res) {
 app.post('/logout', function(req, res) {
   if (CHECK_ORIGIN_TRUST(req, res)) {
     lastCookie = ""
+    res.cookie(COOKIE_KEY, '')
     res.send('cookies clear')
   }else{
     console.log(req.headers.origin)
