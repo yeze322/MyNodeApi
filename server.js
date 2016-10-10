@@ -57,7 +57,7 @@ var CHECK_ORIGIN_TRUST = (req, res) => {
 var lastCookie = ''
 
 var CHECK_COOKIE_EXIST = (req) => {
-  console.log(req.cookies)
+  //console.log(req.cookies)
   return req.cookies.uatoken === lastCookie
 }
 
@@ -73,7 +73,7 @@ var CHECK_LOGIN = (req, res) => {
 
 app.get('/login', function(req, res) {
   if (CHECK_ORIGIN_TRUST(req, res)) {
-    console.log(req.headers.cookie + '|' + lastCookie)
+    //console.log(req.headers.cookie + '|' + lastCookie)
     if (CHECK_COOKIE_EXIST(req)) {
       res.send(true)
     }else{
@@ -92,7 +92,7 @@ app.post('/logout', function(req, res) {
     res.cookie(COOKIE_KEY, '')
     res.send('cookies clear')
   }else{
-    console.log(req.headers.origin)
+    //console.log(req.headers.origin)
     res.status(403)
     res.send(null)
   }
