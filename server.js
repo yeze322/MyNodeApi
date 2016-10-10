@@ -37,19 +37,53 @@ registerKey('name')
 registerKey('repo')
 registerKey('pswd')
 
+var lastCookie = ''
+
 var TrustSiteDic = {
   "http://localhost:3222": true,
   "http://yeze.eastasia.cloudapp.azure.com:3222": true
 }
 
-app.get('/login', function(req, res) {
-  var checked = req.query.name === data.name && req.query.pswd === data.pswd
+var AJAX_CORS_CHECK = (req, res) => {
   if (req.headers.origin in TrustSiteDic) {
+    // enable AJAX CORS for trust sites
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
+    res.setHeader('Access-Control-Allow-Credentials', true)
+    return true
   }
-  res.setHeader('Access-Control-Allow-Credentials', true)
-  res.send(checked.toString())
+  return false
+}
+
+app.get('/login', function(req, res) {
+  if (AJAX_CORS_CHECK(req, res)) {
+    console.log(req.headers.cookie + '|' + lastCookie)
+    // check cookies
+    if (req.headers.cookie === lastCookie) {
+      res.send(true)
+    }else{
+      var checked = req.query.name === data.name && req.query.pswd === data.pswd
+      if(checked){
+        lastCookie = req.headers.cookie
+      }
+      res.send(checked)
+    }
+  }else{
+    res.status(403)
+    res.send(null)
+  }
 })
+
+app.post('/logout', function(req, res) {
+  if (AJAX_CORS_CHECK(req, res)) {
+    lastCookie = ""
+    res.send('cookies clear')
+  }else{
+    console.log(req.headers.origin)
+    res.status(403)
+    res.send(null)
+  }
+})
+
 
 app.get('/supervisor', function(req, res) {
   res.send(req.headers)
