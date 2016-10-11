@@ -40,7 +40,8 @@ registerKey('pswd')
 const TrustSiteDic = {
   "http://localhost:3222": true,
   "http://yeze.eastasia.cloudapp.azure.com:3222": true,
-  "http://yeze.eastasia.cloudapp.azure.com": true
+  "http://yeze.eastasia.cloudapp.azure.com": true,
+  "http://yeze.xyz": true
 }
 const COOKIE_KEY = 'uatoken'
 
