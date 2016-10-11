@@ -59,12 +59,16 @@ var getRandomToken = () => sha1(date.getTime())
 var lastCookie = getRandomToken()
 
 var CHECK_COOKIE_EXIST = (req) => {
-  //console.log(req.cookies)
   return req.cookies.uatoken === lastCookie
 }
 
+var userAccountMap = {
+  'yeze322': { password: '1234' },
+  'yuejzha': { password: '1234' }
+}
+
 var CHECK_LOGIN = (req, res) => {
-  var checked = req.query.name === globalState.name && req.query.pswd === globalState.pswd
+  var checked = userAccountMap[req.query.name] && userAccountMap[req.query.name].password === req.query.pswd
   if(checked){
     lastCookie = sha1(req.query.name + '|' + Math.random())
     res.cookie(COOKIE_KEY, lastCookie)
@@ -74,7 +78,6 @@ var CHECK_LOGIN = (req, res) => {
 
 app.get('/login', function(req, res) {
   if (CHECK_ORIGIN_TRUST(req, res)) {
-    //console.log(req.headers.cookie + '|' + lastCookie)
     if (CHECK_COOKIE_EXIST(req)) {
       res.send(true)
     }else{
@@ -93,7 +96,6 @@ app.post('/logout', function(req, res) {
     //res.cookie(COOKIE_KEY, '')
     res.send('cookies clear')
   }else{
-    //console.log(req.headers.origin)
     res.status(403)
     res.send(null)
   }
