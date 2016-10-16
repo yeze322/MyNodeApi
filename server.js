@@ -1,114 +1,21 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser  = require('cookie-parser')
-var sha1 = require('sha1')
 
 var app = express();
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-var globalState = {
-  'name' : 'yeze322',
-  'repo' : 'MyNodeApi',
-  'pswd' : '123456'
-}
+var LoginApi = require('./api/login.js')
+var registerKey = require('./common/registerKey.js')
 
-var registerKey = (field) => {
-  var url = '/' + field
-  app.get(url, function(req, res) {
-    if(globalState[field] === undefined) {
-      res.status(204)
-    }
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.send(globalState[field])
-  })
-  app.post(url, function(req, res) {
-    if(req.body[field] === undefined) {
-      res.status(404)
-      res.send(`Not received ${field}! Error!`)
-    }else{
-      res.send('received: ' + globalState[field] + '->' + req.body[field])
-      globalState[field] = req.body[field]
-    }
-  })
-}
+registerKey(app, 'name')
+registerKey(app, 'repo')
+registerKey(app, 'pswd')
 
-registerKey('name')
-registerKey('repo')
-registerKey('pswd')
-
-const TrustSiteDic = {
-  "http://localhost:3222": true,
-  "http://yeze.eastasia.cloudapp.azure.com:3222": true,
-  "http://yeze.eastasia.cloudapp.azure.com": true,
-  "http://yeze.xyz": true
-}
-const COOKIE_KEY = 'uatoken'
-
-var CHECK_ORIGIN_TRUST = (req, res) => {
-  if (req.headers.origin in TrustSiteDic) {
-    // enable AJAX CORS for trust sites
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
-    res.setHeader('Access-Control-Allow-Credentials', true)
-    return true
-  }
-  return false
-}
-
-var date = new Date()
-var getRandomToken = () => sha1(date.getTime())
-var lastCookie = getRandomToken()
-
-var CHECK_COOKIE_EXIST = (req) => {
-  return req.cookies.uatoken === lastCookie
-}
-
-var userAccountMap = {
-  'yeze322': { password: '1234' },
-  'yuejzha': { password: '1234' }
-}
-
-var CHECK_LOGIN = (req, res) => {
-  var checked = userAccountMap[req.query.name] && userAccountMap[req.query.name].password === req.query.pswd
-  if(checked){
-    lastCookie = sha1(req.query.name + '|' + Math.random())
-    res.cookie(COOKIE_KEY, lastCookie)
-  }
-  return checked
-}
-
-app.get('/login', function(req, res) {
-  if (CHECK_ORIGIN_TRUST(req, res)) {
-    if (CHECK_COOKIE_EXIST(req)) {
-      res.send(true)
-    }else{
-      var responseObj = CHECK_LOGIN(req, res)
-      res.send(responseObj)
-    }
-  }else{
-    res.status(403)
-    res.send(null)
-  }
-})
-
-app.post('/logout', function(req, res) {
-  if (CHECK_ORIGIN_TRUST(req, res)) {
-    lastCookie = null
-    //res.cookie(COOKIE_KEY, '')
-    res.send('cookies clear')
-  }else{
-    res.status(403)
-    res.send(null)
-  }
-})
-
-
-app.get('/supervisor', function(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
-  res.setHeader('Access-Control-Allow-Credentials', true)
-  res.cookie('sptest', sha1(Math.random()))
-  res.send(req.headers)
-})
+app.get('/login', LoginApi.login)
+app.post('/logout', LoginApi.logout)
+app.get('/supervisor', LoginApi.supervisor)
 
 app.listen(8080, function () {
   console.log('Example app listening on port 8080!');
