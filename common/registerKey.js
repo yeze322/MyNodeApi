@@ -1,5 +1,6 @@
 var CONS = require('./constants.js')
 var globalState = CONS.globalState
+var RedisCC = require('./rediscc')
 
 function registerKey(app, field) {
   var url = '/' + field
@@ -15,6 +16,7 @@ function registerKey(app, field) {
       res.status(404)
       res.send(`Not received ${field}! Error!`)
     }else{
+      RedisCC.client.set(field, req.body[field])
       res.send('received: ' + globalState[field] + '->' + req.body[field])
       globalState[field] = req.body[field]
     }
