@@ -1,9 +1,3 @@
-var globalState = {
-  'name' : 'yeze322',
-  'repo' : 'MyNodeApi',
-  'pswd' : '123456'
-}
-
 const TrustSiteDic = {
   "http://localhost:3222": true,
   "http://yeze.eastasia.cloudapp.azure.com:3222": true,
@@ -19,7 +13,6 @@ var userAccountMap = {
 }
 
 module.exports = {
-  globalState,
   TrustSiteDic,
   COOKIE_KEY,
   userAccountMap
