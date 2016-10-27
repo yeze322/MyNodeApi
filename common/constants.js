@@ -12,8 +12,12 @@ var userAccountMap = {
   'yuejzha': { password: '1234' }
 }
 
+var RedisConf = {
+  EXP_TIME: 256256 // seconds, nealy 3 days
+}
 module.exports = {
   TrustSiteDic,
   COOKIE_KEY,
-  userAccountMap
+  userAccountMap,
+  RedisConf
 }

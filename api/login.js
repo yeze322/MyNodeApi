@@ -2,8 +2,10 @@ var sha1 = require('sha1')
 var RedisCC = require('../common/rediscc.js')
 var CONS = require('../common/constants.js')
 
+var client = RedisCC.client
 const TrustSiteDic = CONS.TrustSiteDic
 const COOKIE_KEY = CONS.COOKIE_KEY
+const TTL = CONS.RedisConf.EXP_TIME
 
 function _CHECK_ORIGIN_TRUST(req, res) {
   if (req.headers.origin in TrustSiteDic) {
@@ -15,11 +17,16 @@ function _CHECK_ORIGIN_TRUST(req, res) {
   return false
 }
 
+function redisSetPair (k, v) {
+  client.set(k, v)
+  client.expire(k, TTL)
+}
+
 function _CHECK_LOGIN(req, res) {
   var checked = CONS.userAccountMap[req.query.name] && CONS.userAccountMap[req.query.name].password === req.query.pswd
   if(checked) {
     var token = sha1(req.query.name + '|' + Math.random())
-    RedisCC.client.set(COOKIE_KEY, token)
+    redisSetPair(token, req.query.name)
     res.cookie(COOKIE_KEY, token)
     return true
   }
@@ -35,13 +42,16 @@ function login(req, res) {
 
   var token = req.cookies[COOKIE_KEY]
 
+  // no token, check pswd & username
   if (!token){
     res.send(_CHECK_LOGIN(req, res))
     return
   }
 
-  RedisCC.client.get(COOKIE_KEY, (err, rep) => {
-    if(rep === token){
+  // has token, check its avalability
+  client.get(token, (err, rep) => {
+    if(rep){
+      client.expire(COOKIE_KEY, TTL)
       res.send(true)
     }else{
       res.send(_CHECK_LOGIN(req, res))
@@ -52,7 +62,7 @@ function login(req, res) {
 
 function logout(req, res) {
   if (_CHECK_ORIGIN_TRUST(req, res)) {
-    RedisCC.client.del(COOKIE_KEY)
+    client.del(COOKIE_KEY)
     res.send('cookies clear')
   }else{
     res.status(403)
