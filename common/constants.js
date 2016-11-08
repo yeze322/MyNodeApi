@@ -6,6 +6,7 @@ const TrustSiteDic = {
 }
 
 const COOKIE_KEY = 'uatoken'
+const USER_KEY = 'user'
 
 var userAccountMap = {
   'yeze322': { password: '1234' },
@@ -18,6 +19,7 @@ var RedisConf = {
 module.exports = {
   TrustSiteDic,
   COOKIE_KEY,
+  USER_KEY,
   userAccountMap,
   RedisConf
 }

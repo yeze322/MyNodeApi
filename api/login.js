@@ -5,6 +5,7 @@ var CONS = require('../common/constants.js')
 var client = RedisCC.client
 const TrustSiteDic = CONS.TrustSiteDic
 const COOKIE_KEY = CONS.COOKIE_KEY
+const USER_KEY = CONS.USER_KEY
 const TTL = CONS.RedisConf.EXP_TIME
 
 function _CHECK_ORIGIN_TRUST(req, res) {
@@ -28,6 +29,7 @@ function _CHECK_LOGIN(req, res) {
     var token = sha1(req.query.name + '|' + Math.random())
     redisSetPair(token, req.query.name)
     res.cookie(COOKIE_KEY, token)
+    res.cookie(USER_KEY, req.query.name)
     return true
   }
   return false
