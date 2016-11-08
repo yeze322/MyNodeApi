@@ -65,6 +65,8 @@ function login(req, res) {
 function logout(req, res) {
   if (_CHECK_ORIGIN_TRUST(req, res)) {
     client.del(req.cookies[COOKIE_KEY])
+    res.cookie(USER_KEY, '')
+    res.status(200)
     res.send('cookies clear')
   }else{
     res.status(403)
