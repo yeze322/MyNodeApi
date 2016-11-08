@@ -5,7 +5,16 @@ var client = RedisCC.client
 const USER_KEY = CONS.USER_KEY
 const GLOBAL_TTL = CONS.RedisConf.EXP_TIME
 
+function ALLOW_TRUST_SITE(req, res) {
+  if (req.headers.origin in TrustSiteDic) {
+    // enable AJAX CORS for trust sites
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
+    res.setHeader('Access-Control-Allow-Credentials', true)
+  }
+}
+
 function getEventStatus(req, res) {
+  ALLOW_TRUST_SITE(req, res)
   var eventName = req.params.eventName
   var userName = req.cookies[USER_KEY]
   client.get(eventName, (err, rep) => {
@@ -20,6 +29,7 @@ function getEventStatus(req, res) {
 }
 
 function onOpenEvent(req, res) {
+  ALLOW_TRUST_SITE(req, res)
   var eventName = req.params.eventName
   var ttl = req.params.ttl || GLOBAL_TTL
   var userName = req.cookies[USER_KEY]
@@ -48,6 +58,7 @@ function onOpenEvent(req, res) {
 }
 
 function onCloseEvent(req, res) {
+  ALLOW_TRUST_SITE(req, res)
   var eventName = req.params.eventName
   var userName = req.cookies[USER_KEY]
   if (!userName) {
