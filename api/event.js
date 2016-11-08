@@ -4,6 +4,7 @@ var CONS = require('../common/constants.js')
 var client = RedisCC.client
 const USER_KEY = CONS.USER_KEY
 const GLOBAL_TTL = CONS.RedisConf.EXP_TIME
+const TrustSiteDic = CONS.TrustSiteDic
 
 function ALLOW_TRUST_SITE(req, res) {
   if (req.headers.origin in TrustSiteDic) {
