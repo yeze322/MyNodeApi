@@ -7,7 +7,7 @@ var expect = chai.expect
 var server
 var agent
 before(function () {
-  server = require('server')
+  server = require('app').listen(7777, () => { console.log('test server running on 7777') })
   agent = chai.request.agent(server)
 })
 
@@ -37,6 +37,10 @@ describe('Basic user name API test', function () {
   })
 })
 
-after(function () {
-  server.close()
+after(function (done) {
+  console.log('name API test finished!')
+  agent.post('/name').send({ name: 'jimmy' }).end(function (err, res) {
+    done()
+    server.close()
+  })
 })
