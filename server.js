@@ -7,12 +7,12 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 
 var LoginApi = require('./api/login.js')
-var registerKey = require('./common/registerKey.js')
+var registerKeyListener = require('./common/registerKeyListener.js')
 var EventApi = require('./api/event.js')
 
-registerKey(app, 'name')
-registerKey(app, 'repo')
-registerKey(app, 'pswd')
+registerKeyListener(app, 'name')
+registerKeyListener(app, 'repo')
+registerKeyListener(app, 'pswd')
 
 app.get('/login', LoginApi.login)
 app.post('/logout', LoginApi.logout)
@@ -22,5 +22,5 @@ app.post('/eventoff/:eventName', EventApi.onCloseEvent)
 app.get('/event/:eventName', EventApi.getEventStatus)
 
 app.listen(8080, function () {
-  console.log('Example app listening on port 8080!');
+  console.log('Listening on port 8080!');
 });

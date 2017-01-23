@@ -2,7 +2,7 @@ var CONS = require('./constants.js')
 var RedisCC = require('./rediscc')
 var redis = require('redis')
 
-function registerKey(app, field) {
+function registerKeyListener(app, field) {
   var url = '/' + field
   app.get(url, function(req, res) {
     RedisCC.client.get(field, (err, rep) => {
@@ -26,4 +26,4 @@ function registerKey(app, field) {
   })
 }
 
-module.exports = registerKey
+module.exports = registerKeyListener
