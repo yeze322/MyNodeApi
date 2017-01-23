@@ -16,10 +16,17 @@ var userAccountMap = {
 var RedisConf = {
   EXP_TIME: 256256 // seconds, nealy 3 days
 }
+
+var machineHostMap = {
+  'YEZE-PC': 'yeze.xyz',
+  'yezeubuntu': 'localhost'
+}
+
 module.exports = {
   TrustSiteDic,
   COOKIE_KEY,
   USER_KEY,
   userAccountMap,
-  RedisConf
+  RedisConf,
+  machineHostMap
 }
