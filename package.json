@@ -9,6 +9,7 @@
   "author": "yeze",
   "license": "ISC",
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "mocha": "^3.2.0"
   }
 }

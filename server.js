@@ -21,6 +21,9 @@ app.post('/eventon/:eventName', EventApi.onOpenEvent)
 app.post('/eventoff/:eventName', EventApi.onCloseEvent)
 app.get('/event/:eventName', EventApi.getEventStatus)
 
-app.listen(8080, function () {
-  console.log('Listening on port 8080!');
-});
+var server = app.listen(8080, function () {
+  var port = server.address().port
+  console.log('Listening on port %s!', port)
+})
+
+module.exports = server
