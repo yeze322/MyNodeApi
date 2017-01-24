@@ -37,8 +37,15 @@ describe('login api test', function () {
       done()
     })
   })
-  it('Login should success by using cookie', function (done) {
+  it('Login should success by using previous cookie', function (done) {
     agent.get('/login?name=test&pswd=tsss').set('cookie', shareCookie).send().end(function (error, response) {
+      expect(error).to.be.null
+      expect(response.text).to.equal('true')
+      done()
+    })
+  })
+  it('Login heartbeat protocol should work', function (done) {
+    agent.get('/login').send().end(function (error, response) {
       expect(error).to.be.null
       expect(response.text).to.equal('true')
       done()
