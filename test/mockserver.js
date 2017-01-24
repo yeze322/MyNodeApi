@@ -3,15 +3,21 @@ require('app-module-path').addPath(__dirname + '/../')
 var chai = require('chai')
 chai.use(require('chai-http'))
 
+function randInt (min, max) {
+  min = min || 0
+  max = max || 1000
+  return Math.floor(Math.random() * (max - min) + min)
+}
+
 var server = (function () {
   var _server
   var _agent
   return {
     start: function (port) {
       if (port === undefined){
-        port = 8080
+        port = randInt(3300, 8887)
       }
-      _server = require('app').listen(port, () => { console.log('test server running on 7777') })      
+      _server = require('app').listen(port, () => { console.log('test server running on %s', port) })      
     },
     getAgent: function () {
       if (_agent === undefined) {

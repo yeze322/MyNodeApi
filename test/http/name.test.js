@@ -3,7 +3,7 @@ var server = require('../mockserver')
 
 var agent
 before(function () {
-  server.start(7777)
+  server.start()
   agent = server.getAgent()
 })
 
@@ -36,7 +36,7 @@ describe('Basic user name API test', function () {
 after(function (done) {
   console.log('name API test finished!')
   agent.post('/name').send({ name: 'jimmy' }).end(function (err, res) {
-    done()
     server.close()
+    done()
   })
 })
