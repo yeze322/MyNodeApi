@@ -8,11 +8,25 @@ const COOKIE_KEY = CONS.COOKIE_KEY
 const USER_KEY = CONS.USER_KEY
 const TTL = CONS.RedisConf.EXP_TIME
 
+function _IS_FROM_MOCHA_TEST_ENV (req) {
+  var ua = req.headers['user-agent']
+  return ua !== undefined && ua.indexOf('node-superagent') > -1
+}
+function _IS_PROD_ENV () {
+  return require('os').hostname() === 'yezeubuntu'
+}
+function _IS_FROM_POSTMAN (req) {
+  return !!req.headers['postman-token']
+}
+
 function _CHECK_ORIGIN_TRUST(req, res) {
+  console.log('origin', req.headers)
   if (req.headers.origin in TrustSiteDic) {
     // enable AJAX CORS for trust sites
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
     res.setHeader('Access-Control-Allow-Credentials', true)
+    return true
+  } else if (!_IS_PROD_ENV() && (_IS_FROM_MOCHA_TEST_ENV(req) || _IS_FROM_POSTMAN(req))) {
     return true
   }
   return false
@@ -51,6 +65,8 @@ function login(req, res) {
   }
 
   // has token, check its avalability
+  //TODO: this token logic has problem, should optimize the redis logic
+  //    multi token can pass auth at the same time
   client.get(token, (err, rep) => {
     if(rep){
       client.expire(COOKIE_KEY, TTL)
