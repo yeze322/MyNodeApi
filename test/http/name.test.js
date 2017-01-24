@@ -1,14 +1,10 @@
-require('app-module-path').addPath(__dirname + '/../../')
+var expect = require('chai').expect
+var server = require('../mockserver')
 
-var chai = require('chai')
-chai.use(require('chai-http'))
-var expect = chai.expect
-
-var server
 var agent
 before(function () {
-  server = require('app').listen(7777, () => { console.log('test server running on 7777') })
-  agent = chai.request.agent(server)
+  server.start(7777)
+  agent = server.getAgent()
 })
 
 describe('Basic user name API test', function () {
