@@ -2,9 +2,10 @@ var expect = require('chai').expect
 var server = require('../mockserver')
 
 var agent
-before(function () {
+before(function (done) {
   server.start()
   agent = server.getAgent()
+  agent.post('/name').send({ name: 'test' }).end(() => {done()})
 })
 
 describe('Basic user name API test', function () {
