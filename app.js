@@ -14,6 +14,7 @@ registerKeyListener(app, 'name')
 registerKeyListener(app, 'repo')
 registerKeyListener(app, 'pswd')
 
+//TODO: login should be post method!
 app.get('/login', LoginApi.login)
 app.post('/logout', LoginApi.logout)
 app.get('/supervisor', LoginApi.supervisor)
