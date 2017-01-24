@@ -20,7 +20,6 @@ function _IS_FROM_POSTMAN (req) {
 }
 
 function _CHECK_ORIGIN_TRUST(req, res) {
-  console.log('origin', req.headers)
   if (req.headers.origin in TrustSiteDic) {
     // enable AJAX CORS for trust sites
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
