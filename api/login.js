@@ -13,30 +13,33 @@ function redisSetPair (k, v) {
   client.expire(k, TTL)
 }
 
-function _checkLogin(username, password) {
+function _checkPassword(username, password) {
   var checked = CONS.userAccountMap[username] && CONS.userAccountMap[username].password === password
   return checked
 }
 
-function _registerLoginCookie(req, res) {
-  var token = sha1(req.query.name + '|' + Math.random())
-  redisSetPair(token, req.query.name)
+function _registerLoginCookie(username, res) {
+  var token = sha1(username + '|' + Math.random())
+  redisSetPair(token, username)
   res.cookie(COOKIE_KEY, token)
-  res.cookie(USER_KEY, req.query.name)
+  res.cookie(USER_KEY, username)
 }
 
 function _extractUserInfo(req) {
-  return {
-    name: req.query.name,
-    password: req.query.pswd
+  var ret
+  if (req.query && req.query.name && req.query.pswd) {
+    ret = {
+      name: req.query.name,
+      password: req.query.pswd
+    }
   }
+  return ret
 }
 
-function _tryLogin(req, res) {
-  var user = _extractUserInfo(req)
-  var checked = _checkLogin(user.name, user.password)
+function _executeLogin(user, req, res) {
+  var checked = _checkPassword(user.name, user.password)
   if (checked) {
-    _registerLoginCookie(req, res)
+    _registerLoginCookie(user.name, res)
     res.send(true)
   } else {
     // TODO: status should be 403 if login failed
@@ -45,32 +48,38 @@ function _tryLogin(req, res) {
 }
 
 function login(req, res) {
+  // enable CROS for trust site
   if (CHECK_ORIGIN_TRUST(req, res) === false) {
     res.status(403)
     res.send(null)
     return
   }
-
-  var token = req.cookies[COOKIE_KEY]
-
-  // no token, check pswd & username
-  if (!token){
-    _tryLogin(req, res)
+  // check user info first
+  var user = _extractUserInfo(req)
+  if (user) {
+    _executeLogin(user, req, res)
     return
   }
-
-  // has token, check its avalability
-  //TODO: this token logic has problem, should optimize the redis logic
-  //    multi token can pass auth at the same time
-  client.get(token, (err, rep) => {
-    if(rep){
-      client.expire(COOKIE_KEY, TTL)
-      res.send(true)
-    }else{
-      _tryLogin(req, res)
-      return
-    }
-  })
+  // if no user info, check cookie
+  var token = req.cookies[COOKIE_KEY]
+  if (!token){
+    // no token, denied
+    res.send(false)
+    return
+  } else {
+    // has token, check its avalability
+    //TODO: this token logic has problem, should optimize the redis logic
+    //    multi token can pass auth at the same time
+    client.get(token, (err, rep) => {
+      if(rep){
+        client.expire(COOKIE_KEY, TTL)
+        res.send(true)
+      }else{
+        res.send(false)
+        return
+      }
+    })
+  }
   return
 }
 

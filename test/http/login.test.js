@@ -42,6 +42,13 @@ describe('login api test', function () {
       done()
     })
   })
+  it('username & password should be handled before cookie', function (done) {
+    agent.simulateLogin('test', 'wrong', shareCookie).end(function (error, response) {
+      expect(error).to.be.null
+      expect(response.text).to.equal('false')
+      done()
+    })
+  })
 })
 
 after(function (done) {
