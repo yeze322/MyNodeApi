@@ -11,7 +11,8 @@ const USER_KEY = 'user'
 var userAccountMap = {
   'yeze322': { password: '1234' },
   'yuejzha': { password: '1234' },
-  'test': {password: 'test'}
+  'test': {password: 'test'},
+  'test1': {password: 'test1'}
 }
 
 var RedisConf = {
