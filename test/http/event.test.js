@@ -1,18 +1,19 @@
 var expect = require('chai').expect
 var server = require('../mockserver')
-var transformCookie = require('../utils').transformCookie
+var extractCookieString = require('../utils').extractCookieString
 
 var agent
 before(function() {
   agent = server.start()
 })
+
 describe('event api should work fine', function () {
   var shareCookie
   var shareEventName
   before(function (done) {
     shareEventName = Math.random().toString()
-    shareCookie = agent.simulateLogin('test', 'test').end(function (error, response) {
-      shareCookie = transformCookie(response.header['set-cookie'])
+    agent.simulateLogin('test', 'test').end(function (error, response) {
+      shareCookie = extractCookieString(response)
       done()
     })
   })

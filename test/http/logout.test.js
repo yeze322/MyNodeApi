@@ -1,6 +1,6 @@
 var expect = require('chai').expect
 var server = require('../mockserver')
-var transformCookie  = require('../utils').transformCookie
+var extractCookieString  = require('../utils').extractCookieString
 
 var agent
 before(function () {
@@ -8,22 +8,22 @@ before(function () {
 })
 
 describe('Logout api should work', function () {
-  var shareCookie2
+  var shareCookie
   before(function (done) {
     agent.get('/login?name=test&pswd=test').set('cookie', '').send().end((error, response) => {
-      shareCookie2 = transformCookie(response.header['set-cookie'])
+      shareCookie = extractCookieString(response)
       done()
     })
   })
   it('login heartbeat success before logout', function (done) {
-    agent.get('/login').set('cookie', shareCookie2).send().end(function (error, response) {
+    agent.get('/login').set('cookie', shareCookie).send().end(function (error, response) {
       expect(error).to.is.null
       expect(response.text).to.equal('true')
       done()
     })
   })
   it('logout should return 200 & reset cookie', function (done) {
-    agent.post('/logout').set('cookie', shareCookie2).send().end(function (error, response) {
+    agent.post('/logout').set('cookie', shareCookie).send().end(function (error, response) {
       expect(error).to.is.null
       expect(response).to.have.status(200)
       //TODO: logout should check if cookie is existing
@@ -32,7 +32,7 @@ describe('Logout api should work', function () {
     })
   })
   it('cookie should expired after logout', function (done) {
-    agent.get('/login').set('cookie', shareCookie2).send().end(function (error, response) {
+    agent.get('/login').set('cookie', shareCookie).send().end(function (error, response) {
       expect(error).to.is.null
       expect(response.text).to.equal('false')
       done()

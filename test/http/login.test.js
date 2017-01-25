@@ -1,6 +1,6 @@
 var expect = require('chai').expect
 var server = require('../mockserver')
-var transformCookie  = require('../utils').transformCookie
+var extractCookieString  = require('../utils').extractCookieString
 
 var agent
 before(function () {
@@ -31,7 +31,7 @@ describe('login api test', function () {
       expect(response).to.have.cookie('user')
       var cookies = response.header['set-cookie']
       expect(cookies.find(x => x.indexOf('user=') > -1)).to.equal('user=test; Path=/')
-      shareCookie = transformCookie(cookies)
+      shareCookie = extractCookieString(response)
       done()
     })
   })
