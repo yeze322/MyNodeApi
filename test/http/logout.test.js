@@ -10,13 +10,13 @@ before(function () {
 describe('Logout api should work', function () {
   var shareCookie
   before(function (done) {
-    agent.get('/login?name=test&pswd=test').set('cookie', '').send().end((error, response) => {
+    agent.simulateLogin('test', 'test').end((error, response) => {
       shareCookie = extractCookieString(response)
       done()
     })
   })
   it('login heartbeat success before logout', function (done) {
-    agent.get('/login').set('cookie', shareCookie).send().end(function (error, response) {
+    agent.simulateLogin(null, null, shareCookie).end(function (error, response) {
       expect(error).to.is.null
       expect(response.text).to.equal('true')
       done()
@@ -32,8 +32,8 @@ describe('Logout api should work', function () {
     })
   })
   it('cookie should expired after logout', function (done) {
-    agent.get('/login').set('cookie', shareCookie).send().end(function (error, response) {
-      expect(error).to.is.null
+    agent.simulateLogin(null, null, shareCookie).end(function (error, response) {
+      expect(response).to.have.status(401)
       expect(response.text).to.equal('false')
       done()
     })
