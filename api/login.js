@@ -36,36 +36,44 @@ function _extractUserInfo(req) {
   return ret
 }
 
-function _executeLogin(user, req, res) {
-  var checked = _checkPassword(user.name, user.password)
-  if (checked) {
-    _registerLoginCookie(user.name, res)
-    res.send(true)
-  } else {
-    // TODO: status should be 403 if login failed
-    res.send(false)
-  }
+function FORBID (res) {
+  res.status(403)
+  res.send()
+}
+
+function DENY (res) {
+  res.status(401)
+  res.send(false)
+}
+
+function ACCEPT (res) {
+  res.status(200)
+  res.send(true)
 }
 
 function login(req, res) {
   // enable CROS for trust site
   if (CHECK_ORIGIN_TRUST(req, res) === false) {
-    res.status(403)
-    res.send(null)
+    FORBID(res)
     return
   }
   // check user info first
   var user = _extractUserInfo(req)
   if (user) {
-    _executeLogin(user, req, res)
+    if (_checkPassword(user.name, user.password)){
+      _registerLoginCookie(user.name, res)
+      ACCEPT(res)
+    } else {
+      // TODO: status should be 403 if login failed
+      DENY(res)
+    }
     return
   }
   // if no user info, check cookie
   var token = req.cookies[COOKIE_KEY]
   if (!token){
     // no token, denied
-    res.send(false)
-    return
+    DENY(res)
   } else {
     // has token, check its avalability
     //TODO: this token logic has problem, should optimize the redis logic
@@ -73,14 +81,12 @@ function login(req, res) {
     client.get(token, (err, rep) => {
       if(rep){
         client.expire(COOKIE_KEY, TTL)
-        res.send(true)
+        ACCEPT(res)
       }else{
-        res.send(false)
-        return
+        DENY(res)
       }
     })
   }
-  return
 }
 
 function logout(req, res) {
@@ -90,8 +96,7 @@ function logout(req, res) {
     res.status(200)
     res.send('cookies clear')
   }else{
-    res.status(403)
-    res.send(null)
+    FORBID(res)
   }
 }
 

@@ -9,16 +9,17 @@ before(function () {
 
 describe('login api test', function () {
   var shareCookie
-  it('Login should failed when post wrong account', function (done) {
+  it('Login should get 401 when post wrong account', function (done) {
     agent.simulateLogin('test', 'wrong').end(function (error, response) {
-      expect(error).to.be.null
+      expect(response).to.have.status(401)
       expect(response.text).to.equal('false')
       done()
     })
   })
-  it('Login should sucess when post correct account', function (done) {
+  it('Login should get 200 when post correct account', function (done) {
     agent.simulateLogin('test', 'test').end(function (error, response) {
       expect(error).to.be.null
+      expect(response).to.have.status(200)
       expect(response.text).to.equal('true')
       done()
     })
@@ -26,6 +27,7 @@ describe('login api test', function () {
   it('success login should set cookie', function (done) {
     agent.simulateLogin('test', 'test').end(function (error, response) {
       expect(error).to.be.null
+      expect(response).to.have.status(200)
       expect(response.text).to.equal('true')
       expect(response).to.have.cookie('uatoken')
       expect(response).to.have.cookie('user')
@@ -38,13 +40,14 @@ describe('login api test', function () {
   it('Login heartbeat protocol should work', function (done) {
     agent.simulateLogin(null, null, shareCookie).end(function (error, response) {
       expect(error).to.be.null
+      expect(response).to.have.status(200)
       expect(response.text).to.equal('true')
       done()
     })
   })
   it('username & password should be handled before cookie', function (done) {
     agent.simulateLogin('test', 'wrong', shareCookie).end(function (error, response) {
-      expect(error).to.be.null
+      expect(response).to.have.status(401)
       expect(response.text).to.equal('false')
       done()
     })
