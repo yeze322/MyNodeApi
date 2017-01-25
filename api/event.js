@@ -44,11 +44,11 @@ function onOpenEvent(req, res) {
       client.set(eventName, userName)
       client.expire(eventName, ttl)
       res.status(201)
-      res.send(`register user ${userName}`)
+      res.send(`register ${eventName} to user ${userName}`)
     }else if(rep === userName){
       res.status(205)
       client.expire(eventName, ttl)
-      res.send(`update ttl ${userName}`)
+      res.send(`update ttl ${userName}:${eventName}`)
     }else{
       res.status(200)
       res.send(true)
@@ -68,16 +68,13 @@ function onCloseEvent(req, res) {
     return
   }
   client.get(eventName, (err, rep) => {
-    console.log('rep == ', rep)
     if (!rep) {
       res.status(400)
       res.send(`$event={eventName} not exists or already expired.`)
     } else if (rep === userName) {
-      console.log('sendback 200')
       res.status(200)
       res.send(`remove success! event=${eventName}`)
       client.del(eventName)
-      console.log('finished send')
     } else {
       res.status(400)
       res.send(`you want to close an event ${eventName} not owned by you`)
