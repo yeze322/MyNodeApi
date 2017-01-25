@@ -70,7 +70,7 @@ function onCloseEvent(req, res) {
   client.get(eventName, (err, rep) => {
     if (!rep) {
       res.status(400)
-      res.send(`$event={eventName} not exists or already expired.`)
+      res.send(`event=${eventName} not exists or already expired.`)
     } else if (rep === userName) {
       res.status(200)
       res.send(`remove success! event=${eventName}`)
