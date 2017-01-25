@@ -9,6 +9,11 @@ function randInt (min, max) {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
+function simulateLogin (username, password, cookie) {
+  var url = (!!username && !!password) ? `/login?name=${username}&pswd=${password}` : '/login'
+  return this.get(url).set('cookie', cookie || '').send()
+}
+
 var server = (function () {
   var _server
   var _agent
@@ -23,6 +28,7 @@ var server = (function () {
     getAgent: function () {
       if (_agent === undefined) {
         _agent = chai.request.agent(_server)
+        _agent.simulateLogin = simulateLogin
       }
       return _agent
     },

@@ -6,14 +6,13 @@ var agent
 before(function() {
   agent = server.start()
 })
-
 describe('event api should work fine', function () {
   var shareCookie
   var shareEventName
   before(function (done) {
-    agent.get('/login?name=test&pswd=test').set('cookie', '').send().end(function (error, response) {
+    shareEventName = Math.random().toString()
+    shareCookie = agent.simulateLogin('test', 'test').end(function (error, response) {
       shareCookie = transformCookie(response.header['set-cookie'])
-      shareEventName = Math.random().toString()
       done()
     })
   })
