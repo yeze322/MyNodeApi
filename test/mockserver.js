@@ -11,7 +11,9 @@ function randInt (min, max) {
 
 function simulateLogin (username, password, cookie) {
   var url = (!!username && !!password) ? `/login?name=${username}&pswd=${password}` : '/login'
-  return this.get(url).set('cookie', cookie || '').send()
+  return this.post(url)
+    .set('cookie', cookie || '')
+    .send({ username, password })
 }
 
 var server = (function () {

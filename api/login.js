@@ -27,10 +27,10 @@ function _registerLoginCookie(username, res) {
 
 function _extractUserInfo(req) {
   var ret
-  if (req.query && req.query.name && req.query.pswd) {
+  if (req.body && req.body.username && req.body.password) {
     ret = {
-      name: req.query.name,
-      password: req.query.pswd
+      name: req.body.username,
+      password: req.body.password
     }
   }
   return ret
