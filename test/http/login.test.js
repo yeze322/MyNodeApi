@@ -12,7 +12,7 @@ describe('login api test', function () {
   it('Login should get 401 when post wrong account', function (done) {
     agent.simulateLogin('test', 'wrong').end(function (error, response) {
       expect(response).to.have.status(401)
-      expect(response.text).to.equal('false')
+      expect(response.text).to.equal('wrong password')
       done()
     })
   })
@@ -48,7 +48,7 @@ describe('login api test', function () {
   it('username & password should be handled before cookie', function (done) {
     agent.simulateLogin('test', 'wrong', shareCookie).end(function (error, response) {
       expect(response).to.have.status(401)
-      expect(response.text).to.equal('false')
+      expect(response.text).to.equal('wrong password')
       done()
     })
   })

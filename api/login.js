@@ -14,7 +14,7 @@ function redisSetPair (k, v) {
 }
 
 function _checkPassword(username, password) {
-  var checked = CONS.userAccountMap[username] && CONS.userAccountMap[username].password === password
+  var checked = !!CONS.userAccountMap[username] && CONS.userAccountMap[username].password === password
   return checked
 }
 
@@ -41,9 +41,9 @@ function FORBID (res) {
   res.send()
 }
 
-function DENY (res) {
+function DENY (res, msg) {
   res.status(401)
-  res.send(false)
+  res.send(msg || false)
 }
 
 function ACCEPT (res) {
@@ -65,7 +65,7 @@ function login(req, res) {
       ACCEPT(res)
     } else {
       // TODO: status should be 403 if login failed
-      DENY(res)
+      DENY(res, 'wrong password')
     }
     return
   }
