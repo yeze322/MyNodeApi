@@ -18,6 +18,7 @@ var server = (function () {
         port = randInt(3300, 8887)
       }
       _server = require('app').listen(port, () => { console.log('test server running on %s', port) })      
+      return this.getAgent()
     },
     getAgent: function () {
       if (_agent === undefined) {

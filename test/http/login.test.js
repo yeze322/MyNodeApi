@@ -7,8 +7,7 @@ function transformCookie (cookieList) {
 
 var agent
 before(function () {
-  server.start()
-  agent = server.getAgent()
+  agent = server.start()
 })
 
 describe('login api test', function () {

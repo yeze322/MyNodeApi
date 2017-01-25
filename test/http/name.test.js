@@ -2,13 +2,14 @@ var expect = require('chai').expect
 var server = require('../mockserver')
 
 var agent
-before(function (done) {
-  server.start()
-  agent = server.getAgent()
-  agent.post('/name').send({ name: 'test' }).end(() => {done()})
+before(function () {
+  agent = server.start()
 })
 
 describe('Basic user name API test', function () {
+  before(function (done) {
+    agent.post('/name').send({ name: 'test' }).end(() => {done()})
+  })
   it('[GET] should return 200', function (done) {
     agent.get('/name').send().end(function (err, res) {
       expect(err).to.be.null
