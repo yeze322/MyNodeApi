@@ -5,7 +5,7 @@ var cookieParser  = require('cookie-parser')
 var whiteList = require('./common/constants').TrustSiteDic
 function allowCORS (req, res, next) {
   if (req.headers.origin in whiteList) {
-    res.header('ccess-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
     res.header('Access-Control-Allow-Credentials', true)
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
