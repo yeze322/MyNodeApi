@@ -16,6 +16,10 @@ function simulateLogin (username, password, cookie) {
     .send({ username, password })
 }
 
+function simulateLogout (cookie) {
+  return this.post('/logout').set('cookie', cookie).send()
+}
+
 var server = (function () {
   var _server
   var _agent
@@ -31,6 +35,7 @@ var server = (function () {
       if (_agent === undefined) {
         _agent = chai.request.agent(_server)
         _agent.simulateLogin = simulateLogin
+        _agent.simulateLogout = simulateLogout
       }
       return _agent
     },

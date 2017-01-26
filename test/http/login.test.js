@@ -7,7 +7,7 @@ before(function () {
   agent = server.start()
 })
 
-describe('login api test', function () {
+describe('login single api basic test', function () {
   var shareCookie
   it('Login should get 401 when post wrong account', function (done) {
     agent.simulateLogin('test', 'wrong').end(function (error, response) {
@@ -21,9 +21,17 @@ describe('login api test', function () {
       expect(error).to.be.null
       expect(response).to.have.status(200)
       expect(response.text).to.equal('true')
+      shareCookie = extractCookieString(response)
       done()
     })
   })
+  after(function () {
+    return agent.simulateLogout(shareCookie)
+  })
+})
+
+describe('login cookie & priority combined test', function () {
+  var shareCookie
   it('success login should set cookie', function (done) {
     agent.simulateLogin('test', 'test').end(function (error, response) {
       expect(error).to.be.null
@@ -51,6 +59,9 @@ describe('login api test', function () {
       expect(response.text).to.equal('wrong password')
       done()
     })
+  })
+  after(function () {
+    return agent.simulateLogout(shareCookie)
   })
 })
 
