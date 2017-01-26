@@ -9,7 +9,7 @@ function _extractPayload (req) {
 }
 
 // all todo api need user cookie
-// the auth process should execute before request handler
+// TODO: the auth process should execute before request handler, considering using express middleware
 function read (req, res) {
   res.status(204)
   res.send()

@@ -53,7 +53,6 @@ function login(req, res) {
       _registerLoginCookie(user.name, res)
       ACCEPT(res)
     } else {
-      // TODO: status should be 403 if login failed
       DENY(res, 'wrong password')
     }
     return
@@ -61,10 +60,8 @@ function login(req, res) {
   // if no user info, check cookie
   var token = req.cookies[COOKIE_KEY]
   if (!token){
-    // no token, denied
     DENY(res)
   } else {
-    // has token, check its avalability
     //TODO: this token logic has problem, should optimize the redis logic
     //    multi token can pass auth at the same time
     client.get(token, (err, rep) => {
