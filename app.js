@@ -6,6 +6,7 @@ var cors = require('cors')
 var app = express();
 app.use(bodyParser.json())
 app.use(cookieParser())
+app.use(cors())
 
 var LoginApi = require('./api/login.js')
 var registerKeyListener = require('./common/registerKeyListener.js')
@@ -15,7 +16,6 @@ registerKeyListener(app, 'name')
 registerKeyListener(app, 'repo')
 registerKeyListener(app, 'pswd')
 
-app.options('*', cors())
 //TODO: login should be post method!
 app.post('/login', LoginApi.login)
 app.post('/logout', LoginApi.logout)
