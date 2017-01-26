@@ -11,11 +11,8 @@ function _IS_FROM_POSTMAN (req) {
   return !!req.headers['postman-token']
 }
 
-function CHECK_ORIGIN_TRUST(req, res) {
+function _CHECK_ORIGIN_TRUST(req) {
   if (req.headers.origin in trustSiteDic) {
-    // enable AJAX CORS for trust sites
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
-    res.setHeader('Access-Control-Allow-Credentials', true)
     return true
   } else if (!_IS_PROD_ENV() && (_IS_FROM_MOCHA_TEST_ENV(req) || _IS_FROM_POSTMAN(req))) {
     return true
@@ -23,6 +20,16 @@ function CHECK_ORIGIN_TRUST(req, res) {
   return false
 }
 
+function allowCORS (req, res, next) {
+  if (_CHECK_ORIGIN_TRUST(req)) {
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+    next()
+  }
+}
+
 module.exports = {
-  CHECK_ORIGIN_TRUST
+  allowCORS
 }

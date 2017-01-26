@@ -1,7 +1,6 @@
 var sha1 = require('sha1')
 var RedisCC = require('../common/rediscc.js')
 var CONS = require('../common/constants.js')
-var CHECK_ORIGIN_TRUST = require('./CROSUtil').CHECK_ORIGIN_TRUST
 
 var client = RedisCC.client
 const COOKIE_KEY = CONS.COOKIE_KEY
@@ -36,11 +35,6 @@ function _extractUserInfo(req) {
   return ret
 }
 
-function FORBID (res) {
-  res.status(403)
-  res.send()
-}
-
 function DENY (res, msg) {
   res.status(401)
   res.send(msg || false)
@@ -52,11 +46,6 @@ function ACCEPT (res) {
 }
 
 function login(req, res) {
-  // enable CROS for trust site
-  if (CHECK_ORIGIN_TRUST(req, res) === false) {
-    FORBID(res)
-    return
-  }
   // check user info first
   var user = _extractUserInfo(req)
   if (user) {
@@ -90,14 +79,10 @@ function login(req, res) {
 }
 
 function logout(req, res) {
-  if (CHECK_ORIGIN_TRUST(req, res)) {
-    client.del(req.cookies[COOKIE_KEY])
-    res.cookie(USER_KEY, '')
-    res.status(200)
-    res.send('cookies clear')
-  }else{
-    FORBID(res)
-  }
+  client.del(req.cookies[COOKIE_KEY])
+  res.cookie(USER_KEY, '')
+  res.status(200)
+  res.send('cookies clear')
 }
 
 function supervisor(req, res) {
