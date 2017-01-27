@@ -21,7 +21,8 @@ var RedisConf = {
 
 var machineHostMap = {
   'YEZE-PC': 'yeze.xyz',
-  'yezeubuntu': 'localhost'
+  'yezeubuntu': 'localhost',
+  'YEZEx1': 'yeze.xyz'
 }
 
 module.exports = {
