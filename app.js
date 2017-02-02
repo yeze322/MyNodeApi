@@ -1,11 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser  = require('cookie-parser')
+var authUtils = require('./common/authUtils')
 
 var app = express();
 app.use(bodyParser.json())
 app.use(cookieParser())
-app.use(require('./common/authUtils').allowCORS)
+app.use(authUtils.allowCORS)
 
 var LoginApi = require('./api/login.js')
 var registerKeyListener = require('./common/registerKeyListener.js')
@@ -28,5 +29,10 @@ app.get('/event/:eventName', EventApi.getEventStatus)
 app.get('/todo', TodoApi.read)
 app.post('/todo', TodoApi.write)
 app.delete('/todo', TodoApi.clear)
+
+app.get('/test/auth', authUtils.authCookie, (req, res) => {
+  res.status(200)
+  res.send()
+})
 
 module.exports = app

@@ -40,26 +40,7 @@ function authCookie (req, res, next) {
     res.status(401)
     res.send('auth failed, no token.')
   } else {
-    client.get(token, (err, rep) => {
-      if (!!rep && rep === username) {
-        next()
-      } else {
-        res.status(401)
-        res.send('auth failed, token not match.')
-      }
-    })
-  }
-}
-
-function authCookie (req, res, next) {
-  var cookies = req.cookies
-  var token = cookies[CONS.COOKIE_KEY]
-  var username = cookies[CONS.USER_KEY]
-  if (!token) {
-    res.status(401)
-    res.send('auth failed, no token.')
-  } else {
-    client.get(token, (err, rep) => {
+    redisClient.get(token, (err, rep) => {
       if (!!rep && rep === username) {
         next()
       } else {
