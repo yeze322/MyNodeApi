@@ -5,7 +5,7 @@ var cookieParser  = require('cookie-parser')
 var app = express();
 app.use(bodyParser.json())
 app.use(cookieParser())
-app.use(require('./common/CROSUtil').allowCORS)
+app.use(require('./common/authUtils').allowCORS)
 
 var LoginApi = require('./api/login.js')
 var registerKeyListener = require('./common/registerKeyListener.js')
