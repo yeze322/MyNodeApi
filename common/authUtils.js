@@ -32,7 +32,7 @@ function allowCORS (req, res, next) {
   next()
 }
 
-function authCookie (req, res, next) {
+function cookieChecker (req, res, next) {
   var cookies = req.cookies
   var token = cookies[CONS.COOKIE_KEY]
   var username = cookies[CONS.USER_KEY]
@@ -53,5 +53,5 @@ function authCookie (req, res, next) {
 
 module.exports = {
   allowCORS,
-  authCookie  
+  cookieChecker  
 }

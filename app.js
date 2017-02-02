@@ -30,7 +30,7 @@ app.get('/todo', TodoApi.read)
 app.post('/todo', TodoApi.write)
 app.delete('/todo', TodoApi.clear)
 
-app.get('/test/auth', authUtils.authCookie, (req, res) => {
+app.get('/test/auth', authUtils.cookieChecker, (req, res) => {
   res.status(200)
   res.send()
 })
