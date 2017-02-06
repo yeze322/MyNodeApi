@@ -11,7 +11,7 @@ app.use(authUtils.allowCORS)
 var LoginApi = require('./api/login.js')
 var registerKeyListener = require('./common/registerKeyListener.js')
 var EventApi = require('./api/event.js')
-var TodoApi = require('./api/todo')
+var UserDataStorageApi = require('./api/userData')
 
 registerKeyListener(app, 'name')
 registerKeyListener(app, 'repo')
@@ -26,9 +26,9 @@ app.post('/eventon/:eventName', EventApi.onOpenEvent)
 app.post('/eventoff/:eventName', EventApi.onCloseEvent)
 app.get('/event/:eventName', EventApi.getEventStatus)
 
-app.get('/todo', TodoApi.read)
-app.post('/todo', TodoApi.write)
-app.delete('/todo', TodoApi.clear)
+app.get('/user/:key', authUtils.cookieChecker, UserDataStorageApi.read)
+app.post('/user/:key', authUtils.cookieChecker, UserDataStorageApi.write)
+app.delete('/user/:key', authUtils.cookieChecker, UserDataStorageApi.delete)
 
 app.get('/test/auth', authUtils.cookieChecker, (req, res) => {
   res.status(200)
