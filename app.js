@@ -28,7 +28,7 @@ app.get('/event/:eventName', EventApi.getEventStatus)
 
 app.get('/user/:key', authUtils.cookieChecker, UserDataStorageApi.read)
 app.post('/user/:key', authUtils.cookieChecker, UserDataStorageApi.write)
-app.delete('/user/:key', authUtils.cookieChecker, UserDataStorageApi.delete)
+app.delete('/user/:key', authUtils.cookieChecker, UserDataStorageApi.clear)
 
 app.get('/test/auth', authUtils.cookieChecker, (req, res) => {
   res.status(200)

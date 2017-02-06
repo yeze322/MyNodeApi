@@ -39,7 +39,7 @@ function write (req, res) {
     var field = req.params.key
     // TODO: extract redis save logic
     redisClient.hset(user, field, payload, (err, rep) => {
-      if (rep) {
+      if (!err) {
         res.status(200)
         res.send()
       } else {
